@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %}Documentos | Sistema RH{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div>
+    <h1>Documentos</h1>
+    <p>Todos os arquivos enviados no sistema.</p>
+  </div>
+</div>
+
+<div class="card">
+  <table class="table">
+    <thead><tr><th>Funcionário</th><th>Tipo</th><th>Arquivo</th><th>Enviado por</th><th>Data</th><th></th></tr></thead>
+    <tbody>
+      {% for row in rows %}
+      <tr>
+        <td>{{ row['funcionario_nome'] }}</td>
+        <td>{{ row['tipo_documento'] }}</td>
+        <td>{{ row['nome_arquivo'] }}</td>
+        <td>{{ row['usuario_nome'] or '-' }}</td>
+        <td>{{ row['enviado_em'] }}</td>
+        <td><a href="{{ url_for('document_download', doc_id=row['id']) }}">Baixar</a></td>
+      </tr>
+      {% else %}
+      <tr><td colspan="6">Nenhum documento cadastrado.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

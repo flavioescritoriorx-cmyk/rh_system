@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% block title %}{{ item['nome'] }} | Sistema RH{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div>
+    <h1>{{ item['nome'] }}</h1>
+    <p>{{ item['cargo'] or 'Sem cargo informado' }}</p>
+  </div>
+  <div class="inline-actions">
+    <a href="{{ url_for('employee_pdf', employee_id=item['id']) }}" class="btn btn-light">Baixar PDF</a>
+    <a href="{{ url_for('employee_edit', employee_id=item['id']) }}" class="btn btn-primary">Editar</a>
+  </div>
+</div>
+
+<div class="grid-2">
+  <div class="card">
+    <h3>Dados do funcionário</h3>
+    <div class="detail-list">
+      <div><strong>ID:</strong> {{ item['id'] }}</div>
+      <div><strong>CPF:</strong> {{ item['cpf'] or '-' }}</div>
+      <div><strong>Data de admissão:</strong> {{ item['data_admissao'] or '-' }}</div>
+      <div><strong>Telefone:</strong> {{ item['telefone'] or '-' }}</div>
+      <div><strong>E-mail:</strong> {{ item['email'] or '-' }}</div>
+      <div><strong>Status:</strong> {{ item['status'] }}</div>
+      <div><strong>Centro de custo:</strong> {{ item['centro_custo'] or '-' }}</div>
+      <div><strong>Carteira assinada:</strong> {{ 'Sim' if item['possui_carteira'] else 'Não' }}</div>
+      <div><strong>Salário:</strong> {{ format_currency(item['salario']) or '-' }}</div>
+      <div><strong>Observações:</strong> {{ item['observacoes'] or '-' }}</div>
+    </div>
+    <form method="post" action="{{ url_for('employee_delete', employee_id=item['id']) }}" onsubmit="return confirm('Deseja realmente excluir este funcionário?');">
+      <button class="btn btn-danger" type="submit">Excluir funcionário</button>
+    </form>
+  </div>
+
+  <div class="card">
+    <h3>Enviar documentos</h3>
+    <form method="post" action="{{ url_for('document_upload', employee_id=item['id']) }}" enctype="multipart/form-data" class="form-grid">
+      <div>
+        <label>Tipo do documento</label>
+        <input type="text" name="tipo_documento" placeholder="Ex.: RG, CTPS, Contrato" required>
+      </div>
+      <div>
+        <label>Arquivos</label>
+        <input type="file" name="arquivos" multiple required>
+      </div>
+      <button class="btn btn-primary" type="submit">Enviar</button>
+    </form>
+  </div>
+</div>
+
+<div class="card">
+  <h3>Documentos do funcionário</h3>
+  <table class="table">
+    <thead><tr><th>Tipo</th><th>Arquivo</th><th>Enviado por</th><th>Data</th><th></th></tr></thead>
+    <tbody>
+      {% for doc in docs %}
+      <tr>
+        <td>{{ doc['tipo_documento'] }}</td>
+        <td>{{ doc['nome_arquivo'] }}</td>
+        <td>{{ doc['usuario_nome'] or '-' }}</td>
+        <td>{{ doc['enviado_em'] }}</td>
+        <td>
+          <div class="table-actions">
+            <a href="{{ url_for('document_download', doc_id=doc['id']) }}">Baixar</a>
+            <form method="post" action="{{ url_for('document_delete', doc_id=doc['id']) }}" onsubmit="return confirm('Excluir documento?');">
+              <button type="submit" class="link-danger">Excluir</button>
+            </form>
+          </div>
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="5">Nenhum documento enviado.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

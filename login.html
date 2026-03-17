@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block title %}Login | Sistema RH{% endblock %}
+{% block content %}
+<div class="login-page">
+  <div class="login-hero">
+    <h1>Sistema RH</h1>
+    <p>Cadastro de funcionários, documentos, usuários e painel gerencial em uma base pronta para uso.</p>
+    <ul>
+      <li>Login protegido</li>
+      <li>Dashboard com indicadores</li>
+      <li>Cadastro completo</li>
+      <li>Upload e gestão de documentos</li>
+    </ul>
+  </div>
+  <div class="auth-card">
+    <h2>Acessar sistema</h2>
+    <p class="muted">Entre com seu usuário e senha.</p>
+    <form method="post" class="form-grid">
+      <div>
+        <label>Usuário</label>
+        <input type="text" name="usuario" required>
+      </div>
+      <div>
+        <label>Senha</label>
+        <input type="password" name="senha" required>
+      </div>
+      <button class="btn btn-primary" type="submit">Entrar</button>
+    </form>
+    <div class="demo-box">
+      <strong>Acesso inicial</strong><br>
+      Usuário: admin<br>
+      Senha: 123456
+    </div>
+  </div>
+</div>
+{% endblock %}

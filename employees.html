@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block title %}Funcionários | Sistema RH{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div>
+    <h1>Funcionários</h1>
+    <p>Consulta, filtros e gestão do cadastro.</p>
+  </div>
+  <a href="{{ url_for('employee_create') }}" class="btn btn-primary">Novo funcionário</a>
+</div>
+
+<div class="card">
+  <form method="get" class="filters">
+    <input type="text" name="q" placeholder="Buscar por nome, cargo, CPF ou centro de custo" value="{{ busca }}">
+    <select name="status">
+      <option value="">Todos os status</option>
+      {% for opt in STATUS_OPTIONS %}
+      <option value="{{ opt }}" {% if filtro_status == opt %}selected{% endif %}>{{ opt }}</option>
+      {% endfor %}
+    </select>
+    <button class="btn btn-primary" type="submit">Filtrar</button>
+    <a href="{{ url_for('employees') }}" class="btn btn-light">Limpar</a>
+  </form>
+</div>
+
+<div class="card">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Nome</th><th>Cargo</th><th>CPF</th><th>Status</th><th>Centro de custo</th><th>Salário</th><th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in rows %}
+      <tr>
+        <td>{{ item['nome'] }}</td>
+        <td>{{ item['cargo'] or '-' }}</td>
+        <td>{{ item['cpf'] or '-' }}</td>
+        <td><span class="badge">{{ item['status'] }}</span></td>
+        <td>{{ item['centro_custo'] or '-' }}</td>
+        <td>{{ format_currency(item['salario']) or '-' }}</td>
+        <td><a href="{{ url_for('employee_detail', employee_id=item['id']) }}">Abrir</a></td>
+      </tr>
+      {% else %}
+      <tr><td colspan="7">Nenhum registro encontrado.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

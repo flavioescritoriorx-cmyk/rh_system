@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% block title %}Usuários | Sistema RH{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div>
+    <h1>Usuários</h1>
+    <p>Cadastro e controle de acesso.</p>
+  </div>
+</div>
+
+<div class="grid-2">
+  <div class="card">
+    <h3>Novo usuário</h3>
+    <form method="post" action="{{ url_for('user_create') }}" class="form-grid">
+      <div>
+        <label>Nome</label>
+        <input type="text" name="nome" required>
+      </div>
+      <div>
+        <label>Usuário</label>
+        <input type="text" name="usuario" required>
+      </div>
+      <div>
+        <label>Senha</label>
+        <input type="password" name="senha" required>
+      </div>
+      <div>
+        <label>Perfil</label>
+        <select name="perfil">
+          {% for perfil in PROFILE_OPTIONS %}
+          <option value="{{ perfil }}">{{ perfil|upper }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div>
+        <label>Status</label>
+        <select name="ativo">
+          <option value="1">Ativo</option>
+          <option value="0">Inativo</option>
+        </select>
+      </div>
+      <button class="btn btn-primary" type="submit">Cadastrar usuário</button>
+    </form>
+  </div>
+
+  <div class="card">
+    <h3>Usuários cadastrados</h3>
+    <table class="table compact">
+      <thead><tr><th>Nome</th><th>Usuário</th><th>Perfil</th><th>Status</th><th></th></tr></thead>
+      <tbody>
+        {% for row in rows %}
+        <tr>
+          <td>{{ row['nome'] }}</td>
+          <td>{{ row['usuario'] }}</td>
+          <td>{{ row['perfil']|upper }}</td>
+          <td>{{ 'Ativo' if row['ativo'] else 'Inativo' }}</td>
+          <td>
+            <div class="table-actions">
+              <form method="post" action="{{ url_for('user_toggle_status', user_id=row['id']) }}">
+                <button class="link-btn" type="submit">{{ 'Desativar' if row['ativo'] else 'Ativar' }}</button>
+              </form>
+              <form method="post" action="{{ url_for('user_reset_password', user_id=row['id']) }}" onsubmit="return confirm('Resetar senha para 123456?');">
+                <button class="link-btn" type="submit">Resetar senha</button>
+              </form>
+            </div>
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="5">Nenhum usuário cadastrado.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard | Sistema RH{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div>
+    <h1>Dashboard</h1>
+    <p>Resumo geral do RH.</p>
+  </div>
+  <a href="{{ url_for('employee_create') }}" class="btn btn-primary">Novo funcionário</a>
+</div>
+
+<div class="stats-grid">
+  <div class="card stat"><span>Total</span><strong>{{ total_func }}</strong></div>
+  <div class="card stat"><span>Ativos</span><strong>{{ ativos }}</strong></div>
+  <div class="card stat"><span>Inativos</span><strong>{{ inativos }}</strong></div>
+  <div class="card stat"><span>Afastados</span><strong>{{ afastados }}</strong></div>
+  <div class="card stat"><span>Com carteira</span><strong>{{ com_carteira }}</strong></div>
+  <div class="card stat"><span>Documentos</span><strong>{{ docs_count }}</strong></div>
+</div>
+
+<div class="grid-2">
+  <div class="card">
+    <h3>Funcionários por status</h3>
+    <table class="table compact">
+      <thead><tr><th>Status</th><th>Total</th></tr></thead>
+      <tbody>
+        {% for row in por_status %}
+        <tr><td>{{ row['status'] }}</td><td>{{ row['total'] }}</td></tr>
+        {% else %}
+        <tr><td colspan="2">Sem dados.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div class="card">
+    <h3>Centro de custo</h3>
+    <table class="table compact">
+      <thead><tr><th>Centro</th><th>Total</th></tr></thead>
+      <tbody>
+        {% for row in por_centro %}
+        <tr><td>{{ row['centro'] }}</td><td>{{ row['total'] }}</td></tr>
+        {% else %}
+        <tr><td colspan="2">Sem dados.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="card">
+  <h3>Últimos cadastros</h3>
+  <table class="table">
+    <thead>
+      <tr><th>Nome</th><th>Cargo</th><th>Status</th><th>Centro de custo</th><th></th></tr>
+    </thead>
+    <tbody>
+      {% for item in recentes %}
+      <tr>
+        <td>{{ item['nome'] }}</td>
+        <td>{{ item['cargo'] or '-' }}</td>
+        <td><span class="badge">{{ item['status'] }}</span></td>
+        <td>{{ item['centro_custo'] or '-' }}</td>
+        <td><a href="{{ url_for('employee_detail', employee_id=item['id']) }}">Abrir</a></td>
+      </tr>
+      {% else %}
+      <tr><td colspan="5">Nenhum funcionário cadastrado.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

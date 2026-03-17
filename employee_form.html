@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% block title %}{{ 'Editar funcionário' if item else 'Novo funcionário' }}{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div>
+    <h1>{{ 'Editar funcionário' if item else 'Novo funcionário' }}</h1>
+    <p>Preencha os dados principais do colaborador.</p>
+  </div>
+  <a href="{{ url_for('employees') }}" class="btn btn-light">Voltar</a>
+</div>
+
+<div class="card">
+  <form method="post" class="form-grid two-col">
+    <div>
+      <label>Nome *</label>
+      <input type="text" name="nome" required value="{{ item['nome'] if item else '' }}">
+    </div>
+    <div>
+      <label>Cargo</label>
+      <input type="text" name="cargo" value="{{ item['cargo'] if item else '' }}">
+    </div>
+    <div>
+      <label>CPF</label>
+      <input type="text" name="cpf" value="{{ item['cpf'] if item else '' }}">
+    </div>
+    <div>
+      <label>Data de admissão</label>
+      <input type="date" name="data_admissao" value="{{ item['data_admissao'] if item else '' }}">
+    </div>
+    <div>
+      <label>Telefone</label>
+      <input type="text" name="telefone" value="{{ item['telefone'] if item else '' }}">
+    </div>
+    <div>
+      <label>E-mail</label>
+      <input type="email" name="email" value="{{ item['email'] if item else '' }}">
+    </div>
+    <div>
+      <label>Status</label>
+      <select name="status">
+        {% for opt in STATUS_OPTIONS %}
+        <option value="{{ opt }}" {% if item and item['status'] == opt %}selected{% elif not item and opt == 'Ativo' %}selected{% endif %}>{{ opt }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div>
+      <label>Centro de custo</label>
+      <input type="text" name="centro_custo" value="{{ item['centro_custo'] if item else '' }}">
+    </div>
+    <div>
+      <label>Salário</label>
+      <input type="text" name="salario" placeholder="Ex.: 2500,00" value="{{ item['salario'] if item and item['salario'] is not none else '' }}">
+    </div>
+    <div>
+      <label>Carteira assinada</label>
+      <select name="possui_carteira">
+        <option value="0" {% if not item or item['possui_carteira'] == 0 %}selected{% endif %}>Não</option>
+        <option value="1" {% if item and item['possui_carteira'] == 1 %}selected{% endif %}>Sim</option>
+      </select>
+    </div>
+    <div class="full">
+      <label>Observações</label>
+      <textarea name="observacoes" rows="4">{{ item['observacoes'] if item else '' }}</textarea>
+    </div>
+    <div class="full actions-row">
+      <button class="btn btn-primary" type="submit">{{ 'Salvar alterações' if item else 'Cadastrar funcionário' }}</button>
+    </div>
+  </form>
+</div>
+{% endblock %}
