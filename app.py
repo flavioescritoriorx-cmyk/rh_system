@@ -710,5 +710,6 @@ def handle_value_error(err):
 
 init_db()
 
+
 if __name__ == "__main__":
     app.run(debug=True)
